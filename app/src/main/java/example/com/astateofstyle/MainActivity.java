@@ -1,6 +1,7 @@
 package example.com.astateofstyle;
 
 import android.content.res.AssetFileDescriptor;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,16 +27,28 @@ public class MainActivity extends AppCompatActivity {
     public AsosApi iCoreApiController;
     public CompositeSubscription iSubs = new CompositeSubscription();
 
+    NavigationView iNaviView;
 
-    public static void BuildCategoryMenu(List<Category> aCategories) {
-        Observable.from(aCategories).subscribe(new Action1<Category>() {
 
-            @Override
-            public void call(Category s) {
-                System.out.println("Hello " + s + "!");
-            }
+    public void BuildCategoryMenu(Category aCatSet) {
 
-        });
+        iNaviView = (NavigationView)findViewById(R.id.navigation);
+
+        //Purge stale, and placeholder categories
+        iNaviView.getMenu().clear();
+
+        List<Listing> cats = aCatSet.getListing();
+
+        Log.d("AsosSubs", "Got categories: " + cats.size());
+
+
+        for (int aPos = 0; aPos < cats.size(); aPos++) {
+            Log.d("AsosSubs", "The name is : " + cats.get(aPos).getName());
+            iNaviView.getMenu().add(cats.get(aPos).getName());
+        }
+
+
+
     }
 
     @Override
@@ -95,41 +108,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onNext(Category aCategories) {
 
-                        List<Listing> cats = aCategories.getListing();
-
-                        Log.d("AsosSubs", "Got categories: " + cats.size());
-
-                       // while (int aPos = 0; aPos < cats.size(); aPos++) {
-
-                       // cats.listIterator().
-                       // while(cats.listIterator().hasNext()) {
-
-
-                        for (int aPos = 0; aPos < cats.size(); aPos++) {
-                            Log.d("AsosSubs", "The name is : " + cats.get(aPos).getName());
-                        }
-
-
-
-                        //}
-
-                        //}
-
-
-
-                        //Log.d("AsosSubs", cats.iterator().next().toString());
-
-                        //BuildCategoryMenu(categories);
-                        //Subscription subscribe = Observable.from(categories).subscribe();
-
-
-                        ///////////////
-
-
-
-
-                        ///////////////
-
+                        BuildCategoryMenu(aCategories);
 
                     };
                 }));
