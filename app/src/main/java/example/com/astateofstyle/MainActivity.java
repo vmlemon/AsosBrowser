@@ -5,6 +5,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.github.pwittchen.reactivenetwork.library.Connectivity;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void BuildCategoryMenu(Category aCatSet) {
 
-        iNaviView = (NavigationView)findViewById(R.id.navigation);
+        iNaviView = (NavigationView) findViewById(R.id.navigation);
 
         //Purge stale, and placeholder categories
         iNaviView.getMenu().clear();
@@ -48,8 +49,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
     }
+
+    //Set up the listeners for the menu items...
+    @Override
+    public boolean onOptionsItemSelected(MenuItem aItem) {
+        switch (aItem.getItemId()) {
+            default:
+                Log.d("AsosMenu", "An item was clicked, and a handler wasn't implemented");
+        }
+
+        return super.onOptionsItemSelected(aItem);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,15 +93,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-
         //Initialise the RxJava/Retrofit API handlers
-       // iCoreApiController
-
-
-
-
-
-        iSubs.add(iCoreApiController.GetCategories()
+         iSubs.add(iCoreApiController.GetCategories()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Category>() {
 
