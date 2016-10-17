@@ -12,8 +12,10 @@ import com.github.pwittchen.reactivenetwork.library.ReactiveNetwork;
 import java.util.List;
 
 import example.com.astateofstyle.models.categories.Category;
+import example.com.astateofstyle.models.categories.Listing;
 import rx.Observable;
 import rx.Observer;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -23,6 +25,18 @@ public class MainActivity extends AppCompatActivity {
 
     public AsosApi iCoreApiController;
     public CompositeSubscription iSubs = new CompositeSubscription();
+
+
+    public static void BuildCategoryMenu(List<Category> aCategories) {
+        Observable.from(aCategories).subscribe(new Action1<Category>() {
+
+            @Override
+            public void call(Category s) {
+                System.out.println("Hello " + s + "!");
+            }
+
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +52,19 @@ public class MainActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Boolean>() {
                     @Override public void call(Boolean isConnectedToInternet) {
-                       Toast netStatus = new Toast(getApplicationContext());
-                        netStatus.setText("No Network Connectivity");
-                        netStatus.setDuration(Toast.LENGTH_LONG);
-                        netStatus.show();
+
+                        Log.d("AStateOfStyle", "Internet connectivity status: " + isConnectedToInternet);
+
+                        if (isConnectedToInternet == true) {
+                            Toast.makeText(getApplicationContext(), "Welcome to the world of Asos!", Toast.LENGTH_LONG);
+                        }
+
+                        else {
+                            Toast.makeText(getApplicationContext(), "No Network Connectivity", Toast.LENGTH_LONG);
+                        }
+
+
+
                     }
                 });
 
@@ -49,13 +72,20 @@ public class MainActivity extends AppCompatActivity {
         //Initialise the RxJava/Retrofit API handlers
        // iCoreApiController
 
+
+
+
+
         iSubs.add(iCoreApiController.GetCategories()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Category>>() {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Category>() {
+
+
                     @Override
                     public void onCompleted() {
                         Log.d("AsosSubs", "Finished fetching data...");
                     }
+
 
                     @Override
                     public void onError(Throwable throwable) {
@@ -63,12 +93,45 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onNext(List<Category> categories) {
-                        Log.d("AsosSubs", "Got categories: " + categories.size() + " Also : " +Observable.from(categories).count());
-                        Log.d("AsosSubs", categories.toString());
+                    public void onNext(Category aCategories) {
 
-                        ;
-                    }
+                        List<Listing> cats = aCategories.getListing();
+
+                        Log.d("AsosSubs", "Got categories: " + cats.size());
+
+                       // while (int aPos = 0; aPos < cats.size(); aPos++) {
+
+                       // cats.listIterator().
+                       // while(cats.listIterator().hasNext()) {
+
+
+                        for (int aPos = 0; aPos < cats.size(); aPos++) {
+                            Log.d("AsosSubs", "The name is : " + cats.get(aPos).getName());
+                        }
+
+
+
+                        //}
+
+                        //}
+
+
+
+                        //Log.d("AsosSubs", cats.iterator().next().toString());
+
+                        //BuildCategoryMenu(categories);
+                        //Subscription subscribe = Observable.from(categories).subscribe();
+
+
+                        ///////////////
+
+
+
+
+                        ///////////////
+
+
+                    };
                 }));
 
     }

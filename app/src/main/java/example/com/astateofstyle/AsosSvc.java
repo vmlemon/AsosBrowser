@@ -15,6 +15,8 @@ public class AsosSvc {
                 /* setErrorHandler(new APIErrorHandler()*/
                 .setLogLevel(RestAdapter.LogLevel.FULL);
 
+
+
         return  builder.build().create(AsosApi.class);
     }
 }

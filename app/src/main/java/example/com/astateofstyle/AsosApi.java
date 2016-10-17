@@ -20,5 +20,5 @@ import static example.com.astateofstyle.Constants.KWomenCatsBaseUri;
 
 public interface AsosApi {
 @GET(KWomenCatsBaseUri)
-    Observable<List<Category>> GetCategories();
+    Observable<Category> GetCategories();
 }
