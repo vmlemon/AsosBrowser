@@ -1,6 +1,7 @@
 package example.com.astateofstyle;
 
 import android.content.res.AssetFileDescriptor;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import com.github.pwittchen.reactivenetwork.library.Connectivity;
 import com.github.pwittchen.reactivenetwork.library.ReactiveNetwork;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import example.com.astateofstyle.models.categories.Category;
 import example.com.astateofstyle.models.categories.Listing;
@@ -33,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void BuildCategoryMenu(Category aCatSet) {
 
-        iNaviView = (NavigationView) findViewById(R.id.navigation);
-
         //Purge stale, and placeholder categories
         iNaviView.getMenu().clear();
 
@@ -45,8 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
         for (int aPos = 0; aPos < cats.size(); aPos++) {
             Log.d("AsosSubs", "The name is : " + cats.get(aPos).getName());
-            iNaviView.getMenu().add(cats.get(aPos).getName());
+            iNaviView.getMenu().add(0,aPos,0, cats.get(aPos).getName());
         }
+
+
 
 
     }
@@ -56,11 +58,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem aItem) {
         switch (aItem.getItemId()) {
             default:
-                Log.d("AsosMenu", "An item was clicked, and a handler wasn't implemented");
+                Log.d("AsosMenu", "An item was clicked, and a handler wasn't implemented (" +
+                        aItem.getItemId() + ")");
         }
 
         return super.onOptionsItemSelected(aItem);
     }
+
+
 
 
     @Override
@@ -70,8 +75,24 @@ public class MainActivity extends AppCompatActivity {
 
         iCoreApiController = AsosSvc.PrepareAsosApi();
 
-        //Watch for network connectivity changes
+        iNaviView = (NavigationView) findViewById(R.id.navigation);
 
+//Set up the NavigationView's click handlers
+        iNaviView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                                                        @Override
+                                                        public boolean onNavigationItemSelected(@NonNull MenuItem aItem) {
+
+                                                            switch (aItem.getItemId()) {
+                                                                default:
+                                                                Log.d("AsosNavi", "Selected category ID : " + aItem.getItemId());
+                                                            }
+
+                                                            return true;
+                                                        }
+                                                    }
+        );
+
+        //Watch for network connectivity changes
         ReactiveNetwork.observeInternetConnectivity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
