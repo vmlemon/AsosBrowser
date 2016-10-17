@@ -3,10 +3,14 @@ package example.com.astateofstyle;
 import android.content.res.AssetFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.github.pwittchen.reactivenetwork.library.Connectivity;
@@ -32,6 +36,21 @@ public class MainActivity extends AppCompatActivity {
 
     NavigationView iNaviView;
 
+    ActionBar iActionBar;
+
+
+    public void StyleUi() {
+        //RelativeLayout baseLay = (RelativeLayout)findViewById(R.id.activity_main);
+
+      //  iActionBar.setLogo(R.drawable.logo);
+       // iActionBar.setDisplayUseLogoEnabled(true);
+
+        //getActionBar().setLogo();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+
+    }
 
     public void BuildCategoryMenu(Category aCatSet) {
 
@@ -73,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        iActionBar = getSupportActionBar();
+        StyleUi();
+
         iCoreApiController = AsosSvc.PrepareAsosApi();
 
         iNaviView = (NavigationView) findViewById(R.id.navigation);
@@ -102,11 +124,12 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("AStateOfStyle", "Internet connectivity status: " + isConnectedToInternet);
 
                         if (isConnectedToInternet == true) {
-                            Toast.makeText(getApplicationContext(), "Welcome to the world of Asos!", Toast.LENGTH_LONG);
+                            //Snackbar.make(getApplicationContext(), "Welcome to the world of Asos!", Snackbar.LENGTH_LONG);
+                            Toast.makeText(getApplicationContext(), "Welcome to the world of Asos!", Toast.LENGTH_LONG).show();
                         }
 
                         else {
-                            Toast.makeText(getApplicationContext(), "No Network Connectivity", Toast.LENGTH_LONG);
+                            Toast.makeText(getApplicationContext(), "No Network Connectivity", Toast.LENGTH_LONG).show();
                         }
 
 
